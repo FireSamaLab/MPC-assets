@@ -14,7 +14,8 @@ Current QA status:
 
 ```txt
 Original imported frame pack: REJECTED
-Current generated rig pack: ACTIVE FIRST PASS
+Polished front alpha target: APPROVED VISUAL DIRECTION
+Current generated rig pack: TECHNICAL SCAFFOLDING ONLY
 ```
 
 The live motion QA page is:
@@ -25,6 +26,12 @@ https://firesamalab.github.io/MPC-assets/motion-test/
 
 See `docs/RIG_PIPELINE.md` for the rebuildable source and export workflow.
 See `docs/FRAME_PACK_QA_AUDIT.md` for why the previous imported pack was rejected.
+
+Current approved visual target:
+
+```txt
+reference/mpc-master-dummy-approved-front-alpha.png
+```
 
 Phase 1 defines:
 

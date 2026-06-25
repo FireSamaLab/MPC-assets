@@ -2,6 +2,14 @@
 
 ## Source Of Truth
 
+The current approved visual target is:
+
+```txt
+reference/mpc-master-dummy-approved-front-alpha.png
+```
+
+The current generated rig is technical scaffolding. It proves the folder, export, and validation workflow, but its visual style should be rebuilt to match the approved alpha target before cosmetics are produced.
+
 The rebuildable source for the current game-ready dummy is:
 
 ```txt
@@ -55,3 +63,4 @@ Do not hand-edit individual PNG frames as the normal workflow.
 
 Tune the rig source, rebuild the pack, review the contact sheet, then commit the generated outputs.
 
+Do not create clothing, hair, or accessory packs against the scaffold rig once the approved alpha target is available. First rebuild the body rig to match the approved target across front, back, left, and right views.
