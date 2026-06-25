@@ -167,7 +167,7 @@ async function main() {
   frames.push(await copyStaticView("master-dummy-back-idle-01-alpha.png", "back"));
   const rightOut = idlePath("right");
   ensureDir(path.dirname(rightOut));
-  await normalizeRightSide(path.join(STATIC_DIR, "master-dummy-right-idle-01-alpha.png"), rightOut);
+  await normalizeRightSide(path.join(STATIC_DIR, "master-dummy-left-idle-01-alpha.png"), rightOut);
   frames.push(path.relative(ROOT, rightOut).replace(/\\/g, "/"));
 
   const leftOut = idlePath("left");
@@ -181,7 +181,7 @@ async function main() {
   const manifest = {
     version: "1.0.0-static",
     status: "static_four_view_review",
-    source: "front/back/right promoted from static review plates; left is an exact mirror of right",
+    source: "front/back promoted from static review plates; right uses corrected side orientation and left is an exact mirror of right",
     frames,
     canvas: {
       width: 1024,
