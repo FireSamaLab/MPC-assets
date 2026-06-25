@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MPC Master Dummy Motion QA</title>
+  <title>MPC Master Dummy Static QA</title>
   <style>
     :root {
       --ink: #101010;
@@ -201,17 +201,16 @@
   <main class="app">
     <header class="top">
       <div>
-        <h1>MPC Master Dummy Motion QA</h1>
-        <p>Generated rig source, transparent PNG exports</p>
+        <h1>MPC Master Dummy Static QA</h1>
+        <p>Static four-view PNG build</p>
       </div>
-      <div class="badge" id="status">Idle front</div>
+      <div class="badge" id="status">Front view</div>
     </header>
 
-    <section class="stage" aria-label="MPC toon animation preview">
+    <section class="stage" aria-label="MPC toon static preview">
       <div class="grid"></div>
       <div class="toon" id="toon">
         <img id="body" alt="">
-        <img id="shorts" alt="">
       </div>
     </section>
 
@@ -221,86 +220,48 @@
         <div class="pill" id="loadStatus">Loading frames</div>
       </div>
       <div class="links">
-        <a href="../exports/qa/master-dummy-v1-contact-sheet.png">QA contact sheet</a>
+        <a href="../exports/qa/static-master-dummy-v1-contact-sheet.png">Static contact sheet</a>
         <span>Build: <code>npm run qa</code></span>
       </div>
       <div class="dpad" aria-label="Direction controls">
-        <button class="btn up" type="button" data-d="up" aria-label="Walk back">&#9650;</button>
-        <button class="btn left" type="button" data-d="left" aria-label="Walk left">&#9664;</button>
-        <button class="btn down" type="button" data-d="down" aria-label="Walk front">&#9660;</button>
-        <button class="btn right" type="button" data-d="right" aria-label="Walk right">&#9654;</button>
+        <button class="btn up" type="button" data-d="back" aria-label="View back">&#9650;</button>
+        <button class="btn left" type="button" data-d="left" aria-label="View left">&#9664;</button>
+        <button class="btn down active" type="button" data-d="front" aria-label="View front">&#9660;</button>
+        <button class="btn right" type="button" data-d="right" aria-label="View right">&#9654;</button>
       </div>
     </section>
   </main>
 
   <script>
-    const state = { d: null, f: "front", i: 0, x: 0.5, y: 0.56, last: 0 };
+    const state = { f: "front" };
     const directions = ["front", "back", "left", "right"];
-    const animations = { idle: 8, walk: 12 };
     const body = document.getElementById("body");
-    const shorts = document.getElementById("shorts");
-    const toon = document.getElementById("toon");
     const statusEl = document.getElementById("status");
     const label = document.getElementById("label");
     const loadStatus = document.getElementById("loadStatus");
     const buttons = [...document.querySelectorAll(".btn")];
-    const z = (n) => String(n).padStart(2, "0");
+    const assetVersion = "static-four-view-right-mirror-20260625";
 
-    function framePath(layer, direction, animation, frame) {
-      const n = z(frame);
-      if (layer === "body") {
-        return `../master-dummy/v1/body/${direction}/${animation}/body_${direction}_${animation}_${n}.png`;
-      }
-      return `../assets/bottoms/shorts_black/${direction}/${animation}/shorts_black_${direction}_${animation}_${n}.png`;
-    }
-
-    function anim() {
-      return state.d ? "walk" : "idle";
-    }
-
-    function count() {
-      return animations[anim()];
-    }
-
-    function frame() {
-      return (state.i % count()) + 1;
+    function framePath(direction) {
+      return `../master-dummy/v1/body/${direction}/idle/body_${direction}_idle_01.png?v=${assetVersion}`;
     }
 
     function draw() {
-      const n = frame();
-      const a = anim();
-      const f = state.f;
-      body.src = framePath("body", f, a, n);
-      shorts.src = framePath("shorts", f, a, n);
-      label.textContent = `body_${f}_${a}_${z(n)}.png`;
-      toon.style.left = `${state.x * 100}%`;
-      toon.style.top = `${state.y * 100}%`;
+      body.src = framePath(state.f);
+      label.textContent = `body_${state.f}_idle_01.png`;
+      statusEl.textContent = `${state.f[0].toUpperCase()}${state.f.slice(1)} view`;
+      buttons.forEach((button) => button.classList.toggle("active", button.dataset.d === state.f));
     }
 
-    function setDir(d) {
-      state.d = d;
-      if (d) {
-        state.f = { up: "back", down: "front", left: "left", right: "right" }[d];
-      }
-      state.i = 0;
-      statusEl.textContent = d ? `Walk ${state.f}` : `Idle ${state.f}`;
-      buttons.forEach((b) => b.classList.toggle("active", b.dataset.d === d));
+    function setDir(direction) {
+      state.f = direction;
       draw();
     }
 
     function preloadFrames() {
-      const paths = [];
-      for (const direction of directions) {
-        for (const [animation, total] of Object.entries(animations)) {
-          for (let n = 1; n <= total; n += 1) {
-            paths.push(framePath("body", direction, animation, n));
-            paths.push(framePath("shorts", direction, animation, n));
-          }
-        }
-      }
-
       let loaded = 0;
       let failed = 0;
+      const paths = directions.map(framePath);
       paths.forEach((src) => {
         const img = new Image();
         img.onload = () => {
@@ -316,36 +277,11 @@
     }
 
     buttons.forEach((button) => {
-      button.onpointerdown = (event) => {
-        event.preventDefault();
-        setDir(button.dataset.d);
-      };
-      button.onpointerup = button.onpointercancel = button.onpointerleave = (event) => {
-        event.preventDefault();
-        setDir(null);
-      };
+      button.addEventListener("click", () => setDir(button.dataset.d));
     });
-
-    function loop(t) {
-      if (t - state.last > 83) {
-        state.last = t;
-        state.i += 1;
-        if (state.d) {
-          if (state.d === "up") state.y -= 0.01;
-          if (state.d === "down") state.y += 0.01;
-          if (state.d === "left") state.x -= 0.01;
-          if (state.d === "right") state.x += 0.01;
-        }
-        state.x = Math.max(0.15, Math.min(0.85, state.x));
-        state.y = Math.max(0.18, Math.min(0.82, state.y));
-        draw();
-      }
-      requestAnimationFrame(loop);
-    }
 
     preloadFrames();
     draw();
-    requestAnimationFrame(loop);
   </script>
 </body>
 </html>

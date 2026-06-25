@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "build:master-dummy": "node tools/build-master-dummy-rig.js",
+    "build:master-dummy": "npm run build:static-views && node tools/promote-static-master-dummy.js",
     "build:static-views": "node tools/build-static-view-drafts.js",
     "qa": "npm run build:master-dummy && npm run validate:frames",
     "validate:frames": "node tools/validate-frame-pack.js",
