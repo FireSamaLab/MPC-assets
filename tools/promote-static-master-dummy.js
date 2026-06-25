@@ -7,6 +7,12 @@ const STATIC_DIR = path.join(ROOT, "drafts", "static-views");
 const BODY_DIR = path.join(ROOT, "master-dummy", "v1", "body");
 const MANIFEST_PATH = path.join(ROOT, "manifests", "mpc-master-dummy-frame-pack-v1.json");
 const QA_DIR = path.join(ROOT, "exports", "qa");
+const CANVAS = 1024;
+const SIDE_TARGET = {
+  height: 858,
+  footY: 929,
+  rightCenterX: 530,
+};
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
@@ -24,6 +30,64 @@ async function copyStaticView(sourceFile, direction) {
     .png()
     .toFile(out);
   return path.relative(ROOT, out).replace(/\\/g, "/");
+}
+
+async function alphaBounds(input) {
+  const image = sharp(input).ensureAlpha();
+  const meta = await image.metadata();
+  const data = await image.raw().toBuffer();
+  let minX = meta.width;
+  let minY = meta.height;
+  let maxX = -1;
+  let maxY = -1;
+
+  for (let y = 0; y < meta.height; y += 1) {
+    for (let x = 0; x < meta.width; x += 1) {
+      if (data[(y * meta.width + x) * 4 + 3] > 0) {
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+      }
+    }
+  }
+
+  if (maxX < 0 || maxY < 0) {
+    throw new Error(`No visible pixels found in ${input}`);
+  }
+
+  return {
+    left: minX,
+    top: minY,
+    width: maxX - minX + 1,
+    height: maxY - minY + 1,
+  };
+}
+
+async function normalizeRightSide(input, output) {
+  const bounds = await alphaBounds(input);
+  const width = Math.round((bounds.width / bounds.height) * SIDE_TARGET.height);
+  const layer = await sharp(input)
+    .extract(bounds)
+    .resize(width, SIDE_TARGET.height, { fit: "fill" })
+    .png()
+    .toBuffer();
+
+  await sharp({
+    create: {
+      width: CANVAS,
+      height: CANVAS,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    },
+  })
+    .composite([{
+      input: layer,
+      left: Math.round(SIDE_TARGET.rightCenterX - width / 2),
+      top: SIDE_TARGET.footY - SIDE_TARGET.height + 1,
+    }])
+    .png()
+    .toFile(output);
 }
 
 async function compositeCell(direction) {
@@ -101,7 +165,10 @@ async function main() {
 
   frames.push(await copyStaticView("master-dummy-front-idle-01-alpha.png", "front"));
   frames.push(await copyStaticView("master-dummy-back-idle-01-alpha.png", "back"));
-  frames.push(await copyStaticView("master-dummy-right-idle-01-alpha.png", "right"));
+  const rightOut = idlePath("right");
+  ensureDir(path.dirname(rightOut));
+  await normalizeRightSide(path.join(STATIC_DIR, "master-dummy-right-idle-01-alpha.png"), rightOut);
+  frames.push(path.relative(ROOT, rightOut).replace(/\\/g, "/"));
 
   const leftOut = idlePath("left");
   ensureDir(path.dirname(leftOut));
