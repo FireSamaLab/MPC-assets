@@ -1,0 +1,75 @@
+{
+  "standard": "MPC Master Dummy",
+  "version": "1.0.0",
+  "project": "Meme Park City",
+  "canvas": {
+    "width": 1024,
+    "height": 1024,
+    "background": "transparent",
+    "centerlineX": 512,
+    "feetBaselineY": 900,
+    "exportScale": 1,
+    "pixelPositioning": "integer-only"
+  },
+  "directions": ["front", "back", "left", "right"],
+  "animations": {
+    "launch": {
+      "idle": { "frames": 8, "fps": 12 },
+      "walk": { "frames": 12, "fps": 12 }
+    },
+    "future": {
+      "run": { "frames": 12, "fps": 16 },
+      "wave": { "frames": 8, "fps": 12 },
+      "celebrate": { "frames": 10, "fps": 12 },
+      "sit": { "frames": 6, "fps": 12 },
+      "dance": { "frames": 12, "fps": 12 }
+    }
+  },
+  "anchors": [
+    "head_center",
+    "hat_top",
+    "hair_front",
+    "hair_back",
+    "left_eye",
+    "right_eye",
+    "mouth",
+    "neck",
+    "chest",
+    "waist",
+    "left_hand",
+    "right_hand",
+    "back_item",
+    "left_foot",
+    "right_foot",
+    "feet_baseline"
+  ],
+  "layers": [
+    "skin_body",
+    "skin_head",
+    "face_base",
+    "eyes",
+    "eyebrows",
+    "mouth",
+    "hair_back",
+    "shirt",
+    "jacket",
+    "pants",
+    "shoes",
+    "hair_front",
+    "face_accessory",
+    "hand_item_left",
+    "hand_item_right",
+    "back_accessory",
+    "hat",
+    "fx"
+  ],
+  "assetNaming": "{category}_{asset_id}_{direction}_{animation}_{frame}.png",
+  "minimumLaunchRequirement": {
+    "directions": ["front"],
+    "animations": ["idle", "walk"]
+  },
+  "fullGameRequirement": {
+    "directions": ["front", "back", "left", "right"],
+    "animations": ["idle", "walk"]
+  }
+}
