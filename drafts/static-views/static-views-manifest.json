@@ -1,0 +1,22 @@
+{
+  "status": "draft_static_views_for_review",
+  "source": "approved front alpha plus generated back and generated left side; right side mirrored from left",
+  "frames": [
+    {
+      "label": "front idle 01",
+      "file": "master-dummy-front-idle-01-alpha.png"
+    },
+    {
+      "label": "back idle 01",
+      "file": "master-dummy-back-idle-01-alpha.png"
+    },
+    {
+      "label": "left idle 01",
+      "file": "master-dummy-left-idle-01-alpha.png"
+    },
+    {
+      "label": "right idle 01",
+      "file": "master-dummy-right-idle-01-alpha.png"
+    }
+  ]
+}
