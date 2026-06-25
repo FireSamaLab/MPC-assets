@@ -1,0 +1,9 @@
+{
+  "name": "mpc-assets-transition",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "validate:frames": "node tools/validate-frame-pack.js",
+    "serve": "python -m http.server 5500"
+  }
+}

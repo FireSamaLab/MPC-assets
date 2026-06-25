@@ -10,6 +10,12 @@ The goal is to support the website avatar customizer and the future 2D game/worl
 
 Before creating hundreds of cosmetics, Meme Park City needs a fixed avatar standard so every asset fits, animates, and exports correctly.
 
+The live motion test uses the real PNG frame pack:
+
+```txt
+https://firesamalab.github.io/MPC-assets/motion-test/
+```
+
 Phase 1 defines:
 
 - MPC Master Dummy v1.0
