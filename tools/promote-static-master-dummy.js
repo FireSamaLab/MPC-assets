@@ -121,6 +121,30 @@ async function normalizeSpritePalette(file) {
   fs.renameSync(tmp, file);
 }
 
+async function insetRightSideEar(file) {
+  const eraseOldEar = Buffer.from(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS}" height="${CANVAS}">
+      <ellipse cx="360" cy="278" rx="54" ry="58" fill="#000"/>
+    </svg>
+  `);
+  const drawInsetEar = Buffer.from(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS}" height="${CANVAS}">
+      <ellipse cx="382" cy="278" rx="30" ry="38" fill="#fec684" stroke="#111111" stroke-width="8"/>
+    </svg>
+  `);
+  const tmp = `${file}.tmp.png`;
+
+  await sharp(file)
+    .composite([
+      { input: eraseOldEar, blend: "dest-out" },
+      { input: drawInsetEar, blend: "over" },
+    ])
+    .png()
+    .toFile(tmp);
+  fs.renameSync(tmp, file);
+  await normalizeSpritePalette(file);
+}
+
 async function normalizeRightSide(input, output) {
   const bounds = await alphaBounds(input);
   const width = Math.round((bounds.width / bounds.height) * SIDE_TARGET.height);
@@ -146,6 +170,7 @@ async function normalizeRightSide(input, output) {
     .png()
     .toFile(output);
   await normalizeSpritePalette(output);
+  await insetRightSideEar(output);
 }
 
 async function compositeCell(direction) {
@@ -239,7 +264,7 @@ async function main() {
   const manifest = {
     version: "1.0.0-static",
     status: "static_four_view_review",
-    source: "front/back promoted from static review plates; right uses corrected side orientation; all views use one normalized skin palette; left is an exact mirror of right",
+    source: "front/back promoted from static review plates; right uses corrected side orientation and inset ear placement; all views use one normalized skin palette; left is an exact mirror of right",
     frames,
     canvas: {
       width: 1024,
