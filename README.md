@@ -13,17 +13,18 @@ Before creating hundreds of cosmetics, Meme Park City needs a fixed avatar stand
 Current QA status:
 
 ```txt
-Imported frame pack: REJECTED
-Reason: structure is valid, but the art does not match the approved master dummy mockup.
+Original imported frame pack: REJECTED
+Current generated rig pack: ACTIVE FIRST PASS
 ```
 
-The live QA page is:
+The live motion QA page is:
 
 ```txt
 https://firesamalab.github.io/MPC-assets/motion-test/
 ```
 
-See `docs/FRAME_PACK_QA_AUDIT.md` before using the current `body_*` frames for production.
+See `docs/RIG_PIPELINE.md` for the rebuildable source and export workflow.
+See `docs/FRAME_PACK_QA_AUDIT.md` for why the previous imported pack was rejected.
 
 Phase 1 defines:
 

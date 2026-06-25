@@ -2,9 +2,16 @@
 
 ## Verdict
 
-The imported `body_*` frame pack is rejected for production use.
+The original imported `body_*` frame pack is rejected for production use.
 
 It is structurally valid because it has the expected folder and frame count, but it does not match the approved MPC Master Dummy v1.0 mockup style.
+
+It has been replaced by a rebuildable generated rig pipeline. See:
+
+```txt
+docs/RIG_PIPELINE.md
+tools/build-master-dummy-rig.js
+```
 
 ## Approved Target
 
@@ -50,4 +57,3 @@ The package therefore mixed a correct technical folder structure with unacceptab
 3. Build front idle and front walk frames from the same approved source.
 4. Only after front QA passes, create back, left, and right turns.
 5. Reject any future pack that passes filename/frame-count validation but fails visual QA.
-

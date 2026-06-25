@@ -3,18 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MPC Asset QA</title>
+  <title>MPC Master Dummy Motion QA</title>
   <style>
     :root {
-      --bg: #0f1110;
-      --panel: #171a18;
-      --panel-2: #f5f5f2;
-      --ink: #f6f6ef;
-      --muted: #aeb5ad;
-      --line: #313731;
-      --green: #79c950;
-      --red: #ff5959;
-      --paper-ink: #111;
+      --ink: #101010;
+      --muted: #555;
+      --panel: #ffffff;
+      --line: #d7d7d7;
+      --grid: #ececec;
+      --accent: #6fbd45;
+      --bg: #f4f4f4;
     }
 
     * {
@@ -28,248 +26,326 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .page {
-      width: min(100%, 1180px);
+    .app {
+      width: min(100%, 760px);
+      min-height: 100vh;
       margin: 0 auto;
-      padding: 24px;
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
     }
 
-    header {
+    .top {
       display: flex;
-      align-items: end;
+      align-items: start;
       justify-content: space-between;
-      gap: 16px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid var(--line);
+      gap: 12px;
     }
 
-    h1,
-    h2,
-    p {
+    .top h1 {
       margin: 0;
-    }
-
-    h1 {
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1;
+      font-size: 22px;
+      line-height: 1.05;
       letter-spacing: 0;
     }
 
-    header p {
-      margin-top: 8px;
+    .top p {
+      margin: 4px 0 0;
       color: var(--muted);
-      font-size: 18px;
+      font-size: 16px;
     }
 
-    .status {
-      border: 1px solid rgba(255, 89, 89, 0.55);
-      color: var(--red);
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-weight: 900;
-      white-space: nowrap;
-      background: rgba(255, 89, 89, 0.08);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
-      gap: 18px;
-      margin-top: 22px;
-      align-items: stretch;
-    }
-
-    .panel {
+    .badge,
+    .pill {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 12px;
-      padding: 16px;
+      padding: 10px 12px;
+      font-weight: 800;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
     }
 
-    .panel h2 {
-      font-size: 20px;
-      line-height: 1.15;
+    .badge {
+      white-space: nowrap;
     }
 
-    .panel p {
-      margin-top: 8px;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .reference-frame {
-      margin-top: 14px;
-      background: #fff;
-      border-radius: 8px;
+    .stage {
+      position: relative;
+      min-height: 540px;
+      height: min(64vh, 700px);
+      background: var(--panel);
+      border: 2px solid var(--line);
+      border-radius: 18px;
       overflow: hidden;
     }
 
-    .reference-frame img {
-      display: block;
+    .grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: 0.55;
+    }
+
+    .toon {
+      position: absolute;
+      left: 50%;
+      top: 56%;
+      width: clamp(330px, 72vw, 500px);
+      aspect-ratio: 1 / 1;
+      transform: translate(-50%, -50%);
+    }
+
+    .toon img {
+      position: absolute;
+      inset: 0;
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: contain;
     }
 
-    .candidate-grid {
+    .controls {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      justify-items: center;
       gap: 12px;
-      margin-top: 14px;
     }
 
-    .candidate {
-      background:
-        linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
-        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
-        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
-      background-color: #fff;
-      background-position: 0 0, 0 10px, 10px -10px, -10px 0;
-      background-size: 20px 20px;
-      border: 1px solid #d7d7d7;
-      border-radius: 8px;
-      min-height: 230px;
+    .frame-readout {
+      width: 100%;
       display: grid;
-      place-items: center;
-      padding: 12px;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
     }
 
-    .candidate img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .label {
-      margin-top: 8px;
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
       color: var(--muted);
-      font-size: 13px;
-      word-break: break-word;
+      font-size: 14px;
     }
 
-    .verdict {
-      margin-top: 18px;
+    .links a {
+      color: #255f14;
+      font-weight: 800;
+    }
+
+    .dpad {
+      width: 188px;
+      height: 188px;
       display: grid;
+      grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
       gap: 10px;
     }
 
-    .verdict div {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 10px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    .verdict strong {
-      color: var(--ink);
-    }
-
-    .bad {
-      color: var(--red);
-      font-weight: 900;
-    }
-
-    .good {
-      color: var(--green);
-      font-weight: 900;
-    }
-
-    .actions {
-      margin-top: 18px;
-      display: grid;
-      gap: 10px;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .actions code {
-      color: #fff;
-      background: #232823;
+    .btn {
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 2px 6px;
+      border-radius: 18px;
+      background: var(--panel);
+      color: var(--ink);
+      font-size: 28px;
+      font-weight: 900;
+      cursor: pointer;
     }
 
-    @media (max-width: 860px) {
-      .page {
-        padding: 16px;
+    .btn.active {
+      border-color: var(--accent);
+      background: #effbe9;
+    }
+
+    .up {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .left {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .down {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .right {
+      grid-column: 3;
+      grid-row: 2;
+    }
+
+    @media (max-width: 520px) {
+      .app {
+        padding: 12px;
       }
 
-      header {
-        align-items: start;
-        flex-direction: column;
+      .top h1 {
+        font-size: 20px;
       }
 
-      .grid,
-      .candidate-grid {
+      .stage {
+        min-height: 470px;
+      }
+
+      .frame-readout {
         grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <main class="page">
-    <header>
+  <main class="app">
+    <header class="top">
       <div>
-        <h1>MPC Master Dummy QA</h1>
-        <p>The imported frame pack does not match the approved mockup target.</p>
+        <h1>MPC Master Dummy Motion QA</h1>
+        <p>Generated rig source, transparent PNG exports</p>
       </div>
-      <div class="status">FRAME PACK REJECTED</div>
+      <div class="badge" id="status">Idle front</div>
     </header>
 
-    <section class="grid">
-      <article class="panel">
-        <h2>Approved Target Reference</h2>
-        <p>
-          This is the visual target for MPC Master Dummy v1.0. Future frame exports
-          must match this silhouette, outline weight, roundness, and clean toon finish.
-        </p>
-        <div class="reference-frame">
-          <img src="../reference/mpc-master-dummy-approved-front-spec.png" alt="Approved MPC master dummy reference">
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>Imported Candidate Pack</h2>
-        <p>
-          These are actual files currently in the repository, but they are not
-          approved production art. The left/right/back views especially fail the
-          proposed look.
-        </p>
-        <div class="candidate-grid">
-          <div>
-            <div class="candidate">
-              <img src="../master-dummy/v1/body/front/idle/body_front_idle_01.png" alt="">
-            </div>
-            <div class="label">master-dummy/v1/body/front/idle/body_front_idle_01.png</div>
-          </div>
-          <div>
-            <div class="candidate">
-              <img src="../master-dummy/v1/body/left/idle/body_left_idle_01.png" alt="">
-            </div>
-            <div class="label">master-dummy/v1/body/left/idle/body_left_idle_01.png</div>
-          </div>
-        </div>
-
-        <div class="verdict">
-          <div><span class="bad">FAIL</span><span><strong>Wrong asset source.</strong> The package does not contain the mockup-quality exported transparent frame named in the reference board.</span></div>
-          <div><span class="bad">FAIL</span><span><strong>Side-view silhouette.</strong> The side frame is thin, oval, and off-style compared with the approved front dummy.</span></div>
-          <div><span class="bad">FAIL</span><span><strong>Art direction.</strong> The candidate pack should not be used for website customizer or game production.</span></div>
-          <div><span class="good">NEXT</span><span><strong>Rebuild required.</strong> Export a new master dummy frame pack from the approved target style before creating cosmetics.</span></div>
-        </div>
-      </article>
+    <section class="stage" aria-label="MPC toon animation preview">
+      <div class="grid"></div>
+      <div class="toon" id="toon">
+        <img id="body" alt="">
+        <img id="shorts" alt="">
+      </div>
     </section>
 
-    <section class="panel actions">
-      <h2>Required Recovery</h2>
-      <p>
-        Produce a real transparent PNG source for <code>master_dummy_front_idle_01.png</code>
-        from the approved target, then build consistent front/back/left/right idle
-        and walk frames from that same source. Do not accept generated filler frames
-        just because they satisfy the folder structure.
-      </p>
+    <section class="controls">
+      <div class="frame-readout">
+        <div class="pill" id="label">body_front_idle_01.png</div>
+        <div class="pill" id="loadStatus">Loading frames</div>
+      </div>
+      <div class="links">
+        <a href="../exports/qa/master-dummy-v1-contact-sheet.png">QA contact sheet</a>
+        <span>Build: <code>npm run qa</code></span>
+      </div>
+      <div class="dpad" aria-label="Direction controls">
+        <button class="btn up" type="button" data-d="up" aria-label="Walk back">&#9650;</button>
+        <button class="btn left" type="button" data-d="left" aria-label="Walk left">&#9664;</button>
+        <button class="btn down" type="button" data-d="down" aria-label="Walk front">&#9660;</button>
+        <button class="btn right" type="button" data-d="right" aria-label="Walk right">&#9654;</button>
+      </div>
     </section>
   </main>
+
+  <script>
+    const state = { d: null, f: "front", i: 0, x: 0.5, y: 0.56, last: 0 };
+    const directions = ["front", "back", "left", "right"];
+    const animations = { idle: 8, walk: 12 };
+    const body = document.getElementById("body");
+    const shorts = document.getElementById("shorts");
+    const toon = document.getElementById("toon");
+    const statusEl = document.getElementById("status");
+    const label = document.getElementById("label");
+    const loadStatus = document.getElementById("loadStatus");
+    const buttons = [...document.querySelectorAll(".btn")];
+    const z = (n) => String(n).padStart(2, "0");
+
+    function framePath(layer, direction, animation, frame) {
+      const n = z(frame);
+      if (layer === "body") {
+        return `../master-dummy/v1/body/${direction}/${animation}/body_${direction}_${animation}_${n}.png`;
+      }
+      return `../assets/bottoms/shorts_black/${direction}/${animation}/shorts_black_${direction}_${animation}_${n}.png`;
+    }
+
+    function anim() {
+      return state.d ? "walk" : "idle";
+    }
+
+    function count() {
+      return animations[anim()];
+    }
+
+    function frame() {
+      return (state.i % count()) + 1;
+    }
+
+    function draw() {
+      const n = frame();
+      const a = anim();
+      const f = state.f;
+      body.src = framePath("body", f, a, n);
+      shorts.src = framePath("shorts", f, a, n);
+      label.textContent = `body_${f}_${a}_${z(n)}.png`;
+      toon.style.left = `${state.x * 100}%`;
+      toon.style.top = `${state.y * 100}%`;
+    }
+
+    function setDir(d) {
+      state.d = d;
+      if (d) {
+        state.f = { up: "back", down: "front", left: "left", right: "right" }[d];
+      }
+      state.i = 0;
+      statusEl.textContent = d ? `Walk ${state.f}` : `Idle ${state.f}`;
+      buttons.forEach((b) => b.classList.toggle("active", b.dataset.d === d));
+      draw();
+    }
+
+    function preloadFrames() {
+      const paths = [];
+      for (const direction of directions) {
+        for (const [animation, total] of Object.entries(animations)) {
+          for (let n = 1; n <= total; n += 1) {
+            paths.push(framePath("body", direction, animation, n));
+            paths.push(framePath("shorts", direction, animation, n));
+          }
+        }
+      }
+
+      let loaded = 0;
+      let failed = 0;
+      paths.forEach((src) => {
+        const img = new Image();
+        img.onload = () => {
+          loaded += 1;
+          loadStatus.textContent = `${loaded}/${paths.length} loaded`;
+        };
+        img.onerror = () => {
+          failed += 1;
+          loadStatus.textContent = `${failed} missing`;
+        };
+        img.src = src;
+      });
+    }
+
+    buttons.forEach((button) => {
+      button.onpointerdown = (event) => {
+        event.preventDefault();
+        setDir(button.dataset.d);
+      };
+      button.onpointerup = button.onpointercancel = button.onpointerleave = (event) => {
+        event.preventDefault();
+        setDir(null);
+      };
+    });
+
+    function loop(t) {
+      if (t - state.last > 83) {
+        state.last = t;
+        state.i += 1;
+        if (state.d) {
+          if (state.d === "up") state.y -= 0.01;
+          if (state.d === "down") state.y += 0.01;
+          if (state.d === "left") state.x -= 0.01;
+          if (state.d === "right") state.x += 0.01;
+        }
+        state.x = Math.max(0.15, Math.min(0.85, state.x));
+        state.y = Math.max(0.18, Math.min(0.82, state.y));
+        draw();
+      }
+      requestAnimationFrame(loop);
+    }
+
+    preloadFrames();
+    draw();
+    requestAnimationFrame(loop);
+  </script>
 </body>
 </html>
