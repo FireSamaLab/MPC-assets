@@ -13,9 +13,29 @@ const SIDE_TARGET = {
   footY: 929,
   rightCenterX: 530,
 };
+const OUTLINE = [17, 17, 17];
+const SKIN_TOP = [255, 207, 151];
+const SKIN_MID = [252, 184, 108];
+const SKIN_BOTTOM = [247, 168, 91];
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function mix(a, b, t) {
+  return a.map((channel, i) => Math.round(channel + (b[i] - channel) * t));
+}
+
+function skinAtY(y, bounds) {
+  const t = clamp((y - bounds.top) / Math.max(1, bounds.height), 0, 1);
+  if (t < 0.55) {
+    return mix(SKIN_TOP, SKIN_MID, t / 0.55);
+  }
+  return mix(SKIN_MID, SKIN_BOTTOM, (t - 0.55) / 0.45);
 }
 
 function idlePath(direction) {
@@ -29,6 +49,7 @@ async function copyStaticView(sourceFile, direction) {
     .resize(1024, 1024, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toFile(out);
+  await normalizeSpritePalette(out);
   return path.relative(ROOT, out).replace(/\\/g, "/");
 }
 
@@ -64,6 +85,42 @@ async function alphaBounds(input) {
   };
 }
 
+async function normalizeSpritePalette(file) {
+  const image = sharp(file).ensureAlpha();
+  const meta = await image.metadata();
+  const data = await image.raw().toBuffer();
+  const bounds = await alphaBounds(file);
+
+  for (let y = 0; y < meta.height; y += 1) {
+    for (let x = 0; x < meta.width; x += 1) {
+      const i = (y * meta.width + x) * 4;
+      const alpha = data[i + 3];
+      if (alpha === 0) {
+        continue;
+      }
+
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      const skin = skinAtY(y, bounds);
+      const lineCandidate = (lum < 112 && r < 150 && g < 135 && b < 120) || (r < 95 && g < 95 && b < 95);
+      const lineT = lineCandidate ? clamp((126 - lum) / 86, 0, 1) : 0;
+      const color = lineT > 0 ? mix(skin, OUTLINE, lineT) : skin;
+
+      data[i] = color[0];
+      data[i + 1] = color[1];
+      data[i + 2] = color[2];
+    }
+  }
+
+  const tmp = `${file}.tmp.png`;
+  await sharp(data, { raw: { width: meta.width, height: meta.height, channels: 4 } })
+    .png()
+    .toFile(tmp);
+  fs.renameSync(tmp, file);
+}
+
 async function normalizeRightSide(input, output) {
   const bounds = await alphaBounds(input);
   const width = Math.round((bounds.width / bounds.height) * SIDE_TARGET.height);
@@ -88,6 +145,7 @@ async function normalizeRightSide(input, output) {
     }])
     .png()
     .toFile(output);
+  await normalizeSpritePalette(output);
 }
 
 async function compositeCell(direction) {
@@ -181,7 +239,7 @@ async function main() {
   const manifest = {
     version: "1.0.0-static",
     status: "static_four_view_review",
-    source: "front/back promoted from static review plates; right uses corrected side orientation and left is an exact mirror of right",
+    source: "front/back promoted from static review plates; right uses corrected side orientation; all views use one normalized skin palette; left is an exact mirror of right",
     frames,
     canvas: {
       width: 1024,
