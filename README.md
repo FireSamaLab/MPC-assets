@@ -10,11 +10,20 @@ The goal is to support the website avatar customizer and the future 2D game/worl
 
 Before creating hundreds of cosmetics, Meme Park City needs a fixed avatar standard so every asset fits, animates, and exports correctly.
 
-The live motion test uses the real PNG frame pack:
+Current QA status:
+
+```txt
+Imported frame pack: REJECTED
+Reason: structure is valid, but the art does not match the approved master dummy mockup.
+```
+
+The live QA page is:
 
 ```txt
 https://firesamalab.github.io/MPC-assets/motion-test/
 ```
+
+See `docs/FRAME_PACK_QA_AUDIT.md` before using the current `body_*` frames for production.
 
 Phase 1 defines:
 
