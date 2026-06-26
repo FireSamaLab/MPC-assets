@@ -132,9 +132,8 @@ function sideBodyMask() {
 function rightSideHeadLayer() {
   return Buffer.from(`
     <svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS}" height="${CANVAS}">
-      <ellipse cx="543" cy="239" rx="171" ry="154" fill="#fec684"/>
-      <path d="M397 334 C355 280 370 175 432 115 C489 59 587 67 656 126 C724 184 735 291 672 352" fill="none" stroke="#111111" stroke-width="8" stroke-linecap="round"/>
-      <ellipse cx="430" cy="275" rx="20" ry="32" fill="#fec684" stroke="#111111" stroke-width="7"/>
+      <ellipse cx="543" cy="229" rx="171" ry="154" fill="#fec684" stroke="#111111" stroke-width="8"/>
+      <ellipse cx="430" cy="265" rx="20" ry="32" fill="#fec684" stroke="#111111" stroke-width="7"/>
     </svg>
   `);
 }
@@ -155,8 +154,8 @@ async function rebuildRightSideHead(file) {
     },
   })
     .composite([
-      { input: rightSideHeadLayer(), left: 0, top: 0 },
       { input: bodyLayer, left: 0, top: 0 },
+      { input: rightSideHeadLayer(), left: 0, top: 0 },
     ])
     .png()
     .toFile(tmp);
@@ -283,7 +282,7 @@ async function main() {
   const manifest = {
     version: "1.0.0-static",
     status: "static_four_view_review",
-    source: "front/back promoted from static review plates; right uses corrected side orientation and rebuilt side head with centered ear placement; all views use one normalized skin palette; left is an exact mirror of right",
+    source: "front/back promoted from static review plates; right uses corrected side orientation and closed side head with centered ear placement; all views use one normalized skin palette; left is an exact mirror of right",
     frames,
     canvas: {
       width: 1024,
