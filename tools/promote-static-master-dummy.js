@@ -121,23 +121,42 @@ async function normalizeSpritePalette(file) {
   fs.renameSync(tmp, file);
 }
 
-async function insetRightSideEar(file) {
-  const eraseOldEar = Buffer.from(`
+function sideBodyMask() {
+  return Buffer.from(`
     <svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS}" height="${CANVAS}">
-      <ellipse cx="360" cy="278" rx="54" ry="58" fill="#000"/>
+      <rect x="0" y="320" width="${CANVAS}" height="${CANVAS}" fill="#fff"/>
     </svg>
   `);
-  const drawInsetEar = Buffer.from(`
+}
+
+function rightSideHeadLayer() {
+  return Buffer.from(`
     <svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS}" height="${CANVAS}">
-      <ellipse cx="382" cy="278" rx="30" ry="38" fill="#fec684" stroke="#111111" stroke-width="8"/>
+      <ellipse cx="543" cy="239" rx="171" ry="154" fill="#fec684"/>
+      <path d="M397 334 C355 280 370 175 432 115 C489 59 587 67 656 126 C724 184 735 291 672 352" fill="none" stroke="#111111" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="430" cy="275" rx="20" ry="32" fill="#fec684" stroke="#111111" stroke-width="7"/>
     </svg>
   `);
+}
+
+async function rebuildRightSideHead(file) {
+  const bodyLayer = await sharp(file)
+    .composite([{ input: sideBodyMask(), blend: "dest-in" }])
+    .png()
+    .toBuffer();
   const tmp = `${file}.tmp.png`;
 
-  await sharp(file)
+  await sharp({
+    create: {
+      width: CANVAS,
+      height: CANVAS,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    },
+  })
     .composite([
-      { input: eraseOldEar, blend: "dest-out" },
-      { input: drawInsetEar, blend: "over" },
+      { input: rightSideHeadLayer(), left: 0, top: 0 },
+      { input: bodyLayer, left: 0, top: 0 },
     ])
     .png()
     .toFile(tmp);
@@ -170,7 +189,7 @@ async function normalizeRightSide(input, output) {
     .png()
     .toFile(output);
   await normalizeSpritePalette(output);
-  await insetRightSideEar(output);
+  await rebuildRightSideHead(output);
 }
 
 async function compositeCell(direction) {
@@ -264,7 +283,7 @@ async function main() {
   const manifest = {
     version: "1.0.0-static",
     status: "static_four_view_review",
-    source: "front/back promoted from static review plates; right uses corrected side orientation and inset ear placement; all views use one normalized skin palette; left is an exact mirror of right",
+    source: "front/back promoted from static review plates; right uses corrected side orientation and rebuilt side head with centered ear placement; all views use one normalized skin palette; left is an exact mirror of right",
     frames,
     canvas: {
       width: 1024,
