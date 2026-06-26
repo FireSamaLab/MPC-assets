@@ -20,6 +20,7 @@ master-dummy-front-idle-01-alpha.png
 master-dummy-back-idle-01-alpha.png
 master-dummy-left-idle-01-alpha.png
 master-dummy-right-idle-01-alpha.png
+master-dummy-side-left-lock-alpha.png
 master-dummy-static-views-contact-sheet.png
 static-views-manifest.json
 ```
@@ -29,5 +30,5 @@ static-views-manifest.json
 - Front uses the approved polished alpha reference.
 - Back and left were generated as draft views from the same visual direction.
 - Right is mirrored from left for consistency.
+- `master-dummy-side-left-lock-alpha.png` is the approved no-ear side source used by the promoted frame pack.
 - These are review plates, not the final animated production frame pack.
-

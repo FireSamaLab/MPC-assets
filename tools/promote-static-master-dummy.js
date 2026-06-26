@@ -7,6 +7,7 @@ const STATIC_DIR = path.join(ROOT, "drafts", "static-views");
 const BODY_DIR = path.join(ROOT, "master-dummy", "v1", "body");
 const MANIFEST_PATH = path.join(ROOT, "manifests", "mpc-master-dummy-frame-pack-v1.json");
 const QA_DIR = path.join(ROOT, "exports", "qa");
+const APPROVED_SIDE_LEFT = path.join(STATIC_DIR, "master-dummy-side-left-lock-alpha.png");
 const CANVAS = 1024;
 const SIDE_TARGET = {
   height: 858,
@@ -149,28 +150,11 @@ async function normalizeSideFrame(file) {
   fs.renameSync(tmp, file);
 }
 
-async function buildRightSide(output) {
-  const side = Buffer.from(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS}" height="${CANVAS}">
-      <ellipse cx="543" cy="230" rx="166" ry="158" fill="#fec684" stroke="#111111" stroke-width="8"/>
-      <path d="M462 348
-        C426 410 414 533 426 625
-        C432 672 446 712 450 748
-        L456 835
-        C420 850 408 887 432 912
-        C462 943 564 940 588 906
-        C604 881 589 850 554 835
-        L548 660
-        C612 582 616 444 550 372
-        C528 330 484 322 462 348 Z"
-        fill="#fbb168" stroke="#111111" stroke-width="8" stroke-linejoin="round"/>
-      <path d="M472 462 C456 540 458 616 474 674" fill="none" stroke="#111111" stroke-width="7" stroke-linecap="round"/>
-      <path d="M519 462 C512 548 515 616 526 674" fill="none" stroke="#111111" stroke-width="7" stroke-linecap="round"/>
-      <ellipse cx="501" cy="688" rx="42" ry="42" fill="#fbb168" stroke="#111111" stroke-width="8"/>
-    </svg>
-  `);
-
-  await sharp(side).png().toFile(output);
+async function buildApprovedSide(output) {
+  await sharp(APPROVED_SIDE_LEFT)
+    .resize(CANVAS, CANVAS, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toFile(output);
   await normalizeSideFrame(output);
   await normalizeSpritePalette(output);
 }
@@ -250,23 +234,23 @@ async function main() {
 
   frames.push(await copyStaticView("master-dummy-front-idle-01-alpha.png", "front"));
   frames.push(await copyStaticView("master-dummy-back-idle-01-alpha.png", "back"));
-  const rightOut = idlePath("right");
-  ensureDir(path.dirname(rightOut));
-  await buildRightSide(rightOut);
-  frames.push(path.relative(ROOT, rightOut).replace(/\\/g, "/"));
-
   const leftOut = idlePath("left");
   ensureDir(path.dirname(leftOut));
-  await sharp(idlePath("right"))
+  await buildApprovedSide(leftOut);
+  frames.push(path.relative(ROOT, leftOut).replace(/\\/g, "/"));
+
+  const rightOut = idlePath("right");
+  ensureDir(path.dirname(rightOut));
+  await sharp(idlePath("left"))
     .flop()
     .png()
-    .toFile(leftOut);
-  frames.splice(2, 0, path.relative(ROOT, leftOut).replace(/\\/g, "/"));
+    .toFile(rightOut);
+  frames.push(path.relative(ROOT, rightOut).replace(/\\/g, "/"));
 
   const manifest = {
     version: "1.0.0-static",
     status: "static_four_view_review",
-    source: "front/back promoted from static review plates; side views are clean deterministic no-ear redraws using one normalized skin palette; left is an exact mirror of right",
+    source: "front/back promoted from static review plates; left side imported from approved no-ear side reference; all views use one normalized skin palette; right is an exact mirror of left",
     frames,
     canvas: {
       width: 1024,
