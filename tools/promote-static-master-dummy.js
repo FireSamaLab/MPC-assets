@@ -152,22 +152,21 @@ async function normalizeSideFrame(file) {
 async function buildRightSide(output) {
   const side = Buffer.from(`
     <svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS}" height="${CANVAS}">
-      <path d="M468 356
-        C432 410 421 532 431 620
-        C436 667 451 704 454 738
-        L459 832
-        C421 849 410 887 433 912
-        C465 943 554 939 575 906
-        C591 880 575 849 540 835
-        L544 658
-        C574 580 578 444 545 374
-        C525 333 487 329 468 356 Z"
-        fill="#fbb168" stroke="#111111" stroke-width="8" stroke-linejoin="round"/>
-      <path d="M475 462 C460 540 462 616 476 674" fill="none" stroke="#111111" stroke-width="7" stroke-linecap="round"/>
-      <path d="M518 462 C512 548 515 616 525 674" fill="none" stroke="#111111" stroke-width="7" stroke-linecap="round"/>
-      <ellipse cx="501" cy="688" rx="42" ry="42" fill="#fbb168" stroke="#111111" stroke-width="8"/>
       <ellipse cx="543" cy="230" rx="166" ry="158" fill="#fec684" stroke="#111111" stroke-width="8"/>
-      <ellipse cx="430" cy="266" rx="20" ry="31" fill="#fec684" stroke="#111111" stroke-width="7"/>
+      <path d="M462 348
+        C426 410 414 533 426 625
+        C432 672 446 712 450 748
+        L456 835
+        C420 850 408 887 432 912
+        C462 943 564 940 588 906
+        C604 881 589 850 554 835
+        L548 660
+        C612 582 616 444 550 372
+        C528 330 484 322 462 348 Z"
+        fill="#fbb168" stroke="#111111" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M472 462 C456 540 458 616 474 674" fill="none" stroke="#111111" stroke-width="7" stroke-linecap="round"/>
+      <path d="M519 462 C512 548 515 616 526 674" fill="none" stroke="#111111" stroke-width="7" stroke-linecap="round"/>
+      <ellipse cx="501" cy="688" rx="42" ry="42" fill="#fbb168" stroke="#111111" stroke-width="8"/>
     </svg>
   `);
 
@@ -267,7 +266,7 @@ async function main() {
   const manifest = {
     version: "1.0.0-static",
     status: "static_four_view_review",
-    source: "front/back promoted from static review plates; side views are clean deterministic redraws with centered ear placement; all views use one normalized skin palette; left is an exact mirror of right",
+    source: "front/back promoted from static review plates; side views are clean deterministic no-ear redraws using one normalized skin palette; left is an exact mirror of right",
     frames,
     canvas: {
       width: 1024,

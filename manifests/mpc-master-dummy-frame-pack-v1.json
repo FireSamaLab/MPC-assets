@@ -1,7 +1,7 @@
 {
   "version": "1.0.0-static",
   "status": "static_four_view_review",
-  "source": "front/back promoted from static review plates; side views are clean deterministic redraws with centered ear placement; all views use one normalized skin palette; left is an exact mirror of right",
+  "source": "front/back promoted from static review plates; side views are clean deterministic no-ear redraws using one normalized skin palette; left is an exact mirror of right",
   "frames": [
     "master-dummy/v1/body/front/idle/body_front_idle_01.png",
     "master-dummy/v1/body/back/idle/body_back_idle_01.png",
