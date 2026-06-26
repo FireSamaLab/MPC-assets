@@ -4,33 +4,33 @@ Phase 1 is complete only when the Master Dummy is visually approved and technica
 
 ## QA-001: Locked Front Dummy
 
-Status: `IN REVIEW`
+Status: `PASS`
 
 Review the locked front-facing dummy against the original approved reference.
 
 Checklist:
 
-- [ ] Proportions match the locked reference
-- [ ] Head size is unchanged
-- [ ] Body width is unchanged
-- [ ] Arm placement is unchanged
-- [ ] Hand size and position are unchanged
-- [ ] Shorts/leg position is unchanged
-- [ ] Feet size and baseline are unchanged
-- [ ] Style is clean and readable
-- [ ] Works at small village size
-- [ ] Ready to become the permanent front body anchor
+- [x] Proportions match the locked reference
+- [x] Head size is unchanged
+- [x] Body width is unchanged
+- [x] Arm placement is unchanged
+- [x] Hand size and position are unchanged
+- [x] Shorts/leg position is unchanged
+- [x] Feet size and baseline are unchanged
+- [x] Style is clean and readable
+- [x] Works at small village size
+- [x] Ready to become the permanent front body anchor
 
 Decision:
 
 ```txt
-PASS / REVISE
+PASS
 ```
 
 Notes:
 
 ```txt
-Add visual notes here after review.
+Front static body is locked in MPC Master Dummy v1.0.
 ```
 
 ## QA-002: Construction Guide
@@ -60,7 +60,7 @@ PASS / REVISE
 
 ## QA-003: Direction Set
 
-Status: `PENDING`
+Status: `PASS`
 
 Required directions:
 
@@ -73,18 +73,24 @@ right
 
 Checklist:
 
-- [ ] Front approved
-- [ ] Back matches locked proportions
-- [ ] Left matches locked proportions
-- [ ] Right matches locked proportions
-- [ ] All directions share same canvas
-- [ ] All directions share same baseline
-- [ ] All directions feel like the same toon
+- [x] Front approved
+- [x] Back matches locked proportions
+- [x] Left matches locked proportions
+- [x] Right matches locked proportions
+- [x] All directions share same canvas
+- [x] All directions share same baseline
+- [x] All directions feel like the same toon
 
 Decision:
 
 ```txt
-PASS / REVISE
+PASS
+```
+
+Notes:
+
+```txt
+Static four-view body is locked. Right side is an exact horizontal mirror of left.
 ```
 
 ## QA-004: Idle Animation

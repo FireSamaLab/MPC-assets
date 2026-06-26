@@ -15,7 +15,7 @@ Current QA status:
 ```txt
 Original imported frame pack: REJECTED
 Polished front alpha target: APPROVED VISUAL DIRECTION
-Current generated rig pack: TECHNICAL SCAFFOLDING ONLY
+MPC Master Dummy v1.0 static four-view body: LOCKED
 ```
 
 The live motion QA page is:
@@ -26,6 +26,7 @@ https://firesamalab.github.io/MPC-assets/motion-test/
 
 See `docs/RIG_PIPELINE.md` for the rebuildable source and export workflow.
 See `docs/FRAME_PACK_QA_AUDIT.md` for why the previous imported pack was rejected.
+See `docs/MPC_MASTER_DUMMY_V1_LOCK.md` for the locked v1 baseline and file hashes.
 
 Current approved visual target:
 
@@ -198,7 +199,15 @@ Before an asset is accepted:
 
 ## Version
 
-Current standard: **MPC Master Dummy v1.0**
+Current standard: **MPC Master Dummy v1.0 LOCKED**
+
+Locked baseline:
+
+```txt
+tag: mpc-master-dummy-v1.0.0-locked
+approved baseline commit: af8b188
+static QA page: https://firesamalab.github.io/MPC-assets/motion-test/
+```
 
 Future versions should be created as new standards rather than breaking existing assets.
 

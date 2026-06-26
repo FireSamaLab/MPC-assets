@@ -249,8 +249,12 @@ async function main() {
 
   const manifest = {
     version: "1.0.0-static",
-    status: "static_four_view_review",
+    status: "locked_static_four_view_v1",
+    lockedAt: "2026-06-26",
+    lockTag: "mpc-master-dummy-v1.0.0-locked",
+    approvedBaselineCommit: "af8b188",
     source: "front/back promoted from static review plates; left side imported from approved no-ear side reference; all views use one normalized skin palette; right is an exact mirror of left",
+    lockRule: "Do not change these body frames in v1.0. Create MPC Master Dummy v2.0 for proportion or silhouette changes.",
     frames,
     canvas: {
       width: 1024,

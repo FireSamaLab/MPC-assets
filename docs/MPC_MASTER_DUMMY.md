@@ -4,6 +4,20 @@ The MPC Master Dummy is the official anchor for every Meme Park City avatar asse
 
 It defines the fixed canvas, proportions, anchor points, animation frame counts, and export rules used by the website avatar customizer and the future 2D game/world.
 
+## Locked Baseline
+
+Status: `LOCKED`
+
+The static four-view body baseline is locked as `MPC Master Dummy v1.0`.
+
+```txt
+lock tag: mpc-master-dummy-v1.0.0-locked
+approved baseline commit: af8b188
+lock record: docs/MPC_MASTER_DUMMY_V1_LOCK.md
+```
+
+Do not change v1 proportions, silhouette, canvas, baseline, or side direction. If the base body must change, create `MPC Master Dummy v2.0`.
+
 ## Golden Rule
 
 All assets must be built on the same 1024 x 1024 canvas and align to the same dummy.

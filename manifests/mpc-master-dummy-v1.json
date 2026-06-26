@@ -1,6 +1,11 @@
 {
   "standard": "MPC Master Dummy",
   "version": "1.0.0",
+  "status": "locked_static_four_view_v1",
+  "lockedAt": "2026-06-26",
+  "lockTag": "mpc-master-dummy-v1.0.0-locked",
+  "approvedBaselineCommit": "af8b188",
+  "lockRule": "Do not change v1 body proportions, silhouette, canvas, baseline, or side direction. Create MPC Master Dummy v2.0 for visual changes.",
   "project": "Meme Park City",
   "canvas": {
     "width": 1024,
